@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F1 — Чемпионы по годам</title>
+<style>
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+        background-color: #111;
+        color: #fff;
+        zoom: 0.85;
+    }
+
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0,0,0,0.95);
+        padding: 10px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+    }
+
+    .logo-container { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 35px; height: 35px; }
+    .logo { font-size: 1.4rem; font-weight: bold; color: #e10600; }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 25px;
+        margin: 0;
+        padding: 0;
+    }
+    nav ul li a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active { color: #e10600; }
+
+    main {
+        margin-top: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        padding: 0 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        color: #e10600;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .background-car {
+        position: fixed;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.06;
+        z-index: -1;
+        transition: background-image 1s ease;
+    }
+    .timeline-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 20px 0;
+    }
+    .timeline-wrapper::-webkit-scrollbar {
+        height: 8px;
+    }
+    .timeline-wrapper::-webkit-scrollbar-thumb {
+        background-color: #e10600;
+        border-radius: 5px;
+    }
+    .timeline-wrapper::-webkit-scrollbar-track {
+        background-color: #222;
+    }
+
+    .timeline {
+        display: flex;
+        align-items: center;
+        height: 60px;
+        padding: 0 20px;
+        min-width: 2000px;
+        position: relative;
+    }
+    .year-point {
+        position: relative;
+        z-index: 1;
+        flex: 0 0 auto;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #e10600;
+        margin: 0 50px;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+    .year-point:hover, .year-point.active { transform: scale(1.5); }
+
+    .year-label {
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .info-box {
+        margin-top: 30px;
+        text-align: center;
+        max-width: 700px;
+        transition: opacity 0.6s ease;
+    }
+    .info-box img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+    .info-box h2 { color: #e10600; font-size: 1.6rem; margin-bottom: 8px; }
+    .info-box p { color: #ddd; font-size: 1rem; line-height: 1.4; }
+
+    @media screen and (max-width: 768px) {
+        nav ul { gap: 15px; }
+        h1 { font-size: 1.6rem; }
+        .info-box img { max-width: 90%; }
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="logo-container">
+        <img src="./Ф1.png" alt="F1 Logo" class="logo-icon">
+        <div class="logo">F1 LEGENDS</div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="forme.html">Гонщики</a></li>
+            <li><a href="comands.html">Команды</a></li>
+            <li><a href="years.html" class="active">Даты</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h1>Чемпионы Формулы 1 (1950 — 2025)</h1>
+    <div class="background-car" id="bg"></div>
+
+    <div class="timeline-wrapper">
+        <div class="timeline" id="timeline"></div>
+    </div>
+
+    <div class="info-box" id="infoBox">
+        <img id="carImage" src="" alt="Болид F1">
+        <h2 id="championName"></h2>
+        <p id="carInfo"></p>
+    </div>
+</main>
+
+    <script>
+const championsData = {
+  1950: {
+    name: "Джузеппе Фарина",
+    team: "Alfa Romeo 158",
+    info: "Первый чемпион Формулы-1, выиграл три из семи гонок сезона.",
+    image: "./1950.jpg",
+  },
+  1951: {
+    name: "Хуан Мануэль Фанхио",
+    team: "Alfa Romeo 159",
+    info: "Первый из пяти титулов легендарного аргентинца.",
+    image: "./1951.jpg",
+  },
+  1952: {
+    name: "Альберто Аскари",
+    team: "Ferrari 500",
+    info: "Полное доминирование Ferrari и первый титул Аскари.",
+    image: "./1952.jpg",
+  },
+  1953: {
+    name: "Альберто Аскари",
+    team: "Ferrari 500",
+    info: "Защитил титул и подтвердил превосходство Ferrari.",
+    image: "./1953.jpg",
+  },
+  1954: {
+    name: "Хуан Мануэль Фанхио",
+    team: "Mercedes W196",
+    info: "Вернулся в Mercedes и завоевал третий титул.",
+    image: "./1954.jpg",
+  },
+  1955: {
+    name: "Хуан Мануэль Фанхио",
+    team: "Mercedes W196",
+    info: "Продолжил доминирование с Mercedes.",
+    image: "./1955.jpg",
+  },
+  1956: {
+    name: "Хуан Мануэль Фанхио",
+    team: "Ferrari D50",
+    info: "Четвёртый титул в карьере, теперь с Ferrari.",
+    image: "./1956.jpg",
+  },
+  1957: {
+    name: "Хуан Мануэль Фанхио",
+    team: "Maserati 250F",
+    info: "Пятый и последний титул великого аргентинца.",
+    image: "./1957.jpg",
+  },
+  1958: {
+    name: "Майк Хоторн",
+    team: "Ferrari 246",
+    info: "Первый британец — чемпион мира.",
+    image: "./1958.jpg",
+  },
+  1959: {
+    name: "Джек Брэбем",
+    team: "Cooper-Climax",
+    info: "Первый чемпион на заднемоторной машине.",
+    image: "./1959.jpg",
+  },
+  1960: {
+    name: "Джек Брэбем",
+    team: "Cooper-Climax",
+    info: "Защитил титул, подтвердив революцию заднего привода.",
+    image: "./1960.jpg",
+  },
+  1961: {
+    name: "Фил Хилл",
+    team: "Ferrari 156",
+    info: "Первый американец-чемпион Формулы-1.",
+    image: "./1961.jpg",
+  },
+  1962: {
+    name: "Грэм Хилл",
+    team: "BRM P57",
+    info: "Первый титул для BRM и Грэма Хилла.",
+    image: "./1962.jpg",
+  },
+  1963: {
+    name: "Джим Кларк",
+    team: "Lotus 25",
+    info: "Полное доминирование Кларка и Lotus.",
+    image: "./1963.jpg",
+  },
+  1964: {
+    name: "Джон Сёртис",
+    team: "Ferrari 158",
+    info: "Единственный чемпион мира и на мотоцикле, и в Формуле-1.",
+    image: "./1964.jpg",
+  },
+  1965: {
+    name: "Джим Кларк",
+    team: "Lotus 33",
+    info: "Второй титул Кларка — вновь уверенное доминирование.",
+    image: "./1965.jpg",
+  },
+  1966: {
+    name: "Джек Брэбем",
+    team: "Brabham BT19",
+    info: "Единственный чемпион на машине собственной конструкции.",
+    image: "./1966.jpg",
+  },
+  1967: {
+    name: "Денни Халм",
+    team: "Brabham-Repco",
+    info: "Первый и единственный титул новозеландца.",
+    image: "./1967.jpg",
+  },
+  1968: {
+    name: "Грэм Хилл",
+    team: "Lotus 49",
+    info: "Второй титул Грэма Хилла, трагический сезон для Lotus.",
+    image: "./1968.jpg",
+  },
+  1969: {
+    name: "Джеки Стюарт",
+    team: "Matra-Ford",
+    info: "Первый титул легендарного шотландца.",
+    image: "./1969.jpg",
+  },
+  1970: {
+    name: "Йохен Риндт",
+    team: "Lotus 72",
+    info: "Единственный посмертный чемпион Формулы-1.",
+    image: "./1970.jpg",
+  },
+  1971: {
+    name: "Джеки Стюарт",
+    team: "Tyrrell 003",
+    info: "Уверенная победа с новой британской командой Tyrrell.",
+    image: "./1971.jpg",
+  },
+  1972: {
+    name: "Эмерсон Фиттипальди",
+    team: "Lotus 72D",
+    info: "Самый молодой чемпион на тот момент.",
+    image: "./1972.jpg",
+  },
+  1973: {
+    name: "Джеки Стюарт",
+    team: "Tyrrell 006",
+    info: "Третий титул перед завершением карьеры.",
+    image: "./1973.jpg",
+  },
+  1974: {
+    name: "Эмерсон Фиттипальди",
+    team: "McLaren M23",
+    info: "Первый титул McLaren в истории.",
+    image: "./1974.jpg",
+  },
+  1975: {
+    name: "Ники Лауда",
+    team: "Ferrari 312T",
+    info: "Возрождение Ferrari и первый титул Лауды.",
+    image: "./1975.jpg",
+  },
+  1976: {
+    name: "Джеймс Хант",
+    team: "McLaren M23",
+    info: "Драматичный сезон — борьба с Лаудой до последнего.",
+    image: "./1976.jpg",
+  },
+  1977: {
+    name: "Ники Лауда",
+    team: "Ferrari 312T2",
+    info: "Возвращение после аварии и второй титул.",
+    image: "./1977.jpg",
+  },
+  1978: {
+    name: "Марио Андретти",
+    team: "Lotus 79",
+    info: "Триумф «граунд-эффекта» и единственный титул американца.",
+    image: "./1978.jpg",
+  },
+  1979: {
+    name: "Жоди Шектер",
+    team: "Ferrari 312T4",
+    info: "Последний чемпион Ferrari до Шумахера.",
+    image: "./1979.jpg",
+  },
+  1980: {
+    name: "Алан Джонс",
+    team: "Williams FW07B",
+    info: "Первый чемпионский титул для Williams.",
+    image: "./1980.jpg",
+  },
+  1981: {
+    name: "Нельсон Пике",
+    team: "Brabham BT49",
+    info: "Первый титул бразильца Пике.",
+    image: "./1981.jpg",
+  },
+  1982: {
+    name: "Кеке Росберг",
+    team: "Williams FW08",
+    info: "Неожиданный чемпион в хаотичном сезоне.",
+    image: "./1982.jpg",
+  },
+  1983: {
+    name: "Нельсон Пике",
+    team: "Brabham BT52",
+    info: "Первый чемпион на турбодвигателе.",
+    image: "./1983.jpg",
+  },
+  1984: {
+    name: "Ники Лауда",
+    team: "McLaren MP4/2",
+    info: "Победа над Простом с преимуществом в пол-очка.",
+    image: "./1984.jpg",
+  },
+  1985: {
+    name: "Ален Прост",
+    team: "McLaren MP4/2B",
+    info: "Первый француз-чемпион Формулы-1.",
+    image: "./1985.jpg",
+  },
+  1986: {
+    name: "Ален Прост",
+    team: "McLaren MP4/2C",
+    info: "Защитил титул в драматичном финале.",
+    image: "./1986.jpg",
+  },
+  1987: {
+    name: "Нельсон Пике",
+    team: "Williams FW11B",
+    info: "Третий и последний титул Пике.",
+    image: "./1987.jpg",
+  },
+  1988: {
+    name: "Айртон Сенна",
+    team: "McLaren MP4/4",
+    info: "Начало легендарного соперничества с Простом.",
+    image: "./1988.jpg",
+  },
+  1989: {
+    name: "Ален Прост",
+    team: "McLaren MP4/5",
+    info: "Третий титул после столкновения с Сенной в Японии.",
+    image: "./imas/1989.jpg",
+  },
+  1990: {
+    name: "Айртон Сенна",
+    team: "McLaren MP4/5B",
+    info: "Реванш за 1989 и второй титул.",
+    image: "./1990.jpg",
+  },
+  1991: {
+    name: "Айртон Сенна",
+    team: "McLaren MP4/6",
+    info: "Третий и последний титул Сенны.",
+    image: "./1991.jpg",
+  },
+  1992: {
+    name: "Найджел Мэнселл",
+    team: "Williams FW14B",
+    info: "Полное доминирование активной подвески Williams.",
+    image: "./1992.jpg",
+  },
+  1993: {
+    name: "Ален Прост",
+    team: "Williams FW15C",
+    info: "Четвёртый титул и завершение карьеры.",
+    image: "./1993.jpg",
+  },
+  1994: {
+    name: "Михаэль Шумахер",
+    team: "Benetton B194",
+    info: "Первый титул Шумахера в драматичном сезоне.",
+    image: "./1994.jpg",
+  },
+  1995: {
+    name: "Михаэль Шумахер",
+    team: "Benetton B195",
+    info: "Второй титул подряд — начало эры Шумахера.",
+    image: "./1995.jpg",
+  },
+  1996: {
+    name: "Деймон Хилл",
+    team: "Williams FW18",
+    info: "Первый сын чемпиона, ставший чемпионом.",
+    image: "./1996.jpg",
+  },
+  1997: {
+    name: "Жак Вильнёв",
+    team: "Williams FW19",
+    info: "Последний титул Williams в XX веке.",
+    image: "./1997.jpg",
+  },
+  1998: {
+    name: "Мика Хаккинен",
+    team: "McLaren MP4/13",
+    info: "Первый титул финского аса.",
+    image: "./1998.jpg",
+  },
+  1999: {
+    name: "Мика Хаккинен",
+    team: "McLaren MP4/14",
+    info: "Защитил титул в напряжённой борьбе с Феррари.",
+    image: "./1999.jpg",
+  },
+  2000: {
+    name: "Михаэль Шумахер",
+    team: "Ferrari F1-2000",
+    info: "Возрождение Ferrari и начало доминации.",
+    image: "./2000.jpg",
+  },
+  2001: {
+    name: "Михаэль Шумахер",
+    team: "Ferrari F2001",
+    info: "Второй титул подряд с рекордным преимуществом.",
+    image: "./2001.jpg",
+  },
+  2002: {
+    name: "Михаэль Шумахер",
+    team: "Ferrari F2002",
+    info: "Один из самых доминирующих сезонов в истории.",
+    image: "./2002.jpg",
+  },
+  2003: {
+    name: "Михаэль Шумахер",
+    team: "Ferrari F2003-GA",
+    info: "Пятый титул подряд и шестой в карьере.",
+    image: "./2003.jpg",
+  },
+  2004: {
+    name: "Михаэль Шумахер",
+    team: "Ferrari F2004",
+    info: "Седьмой титул — абсолютная вершина карьеры.",
+    image: "./2004.jpg",
+  },
+  2005: {
+    name: "Фернандо Алонсо",
+    team: "Renault R25",
+    info: "Конец эры Ferrari, новый молодой чемпион.",
+    image: "./2005.jpg",
+  },
+  2006: {
+    name: "Фернандо Алонсо",
+    team: "Renault R26",
+    info: "Второй подряд титул и конец эпохи V10.",
+    image: "./2006.jpg",
+  },
+  2007: {
+    name: "Кими Райкконен",
+    team: "Ferrari F2007",
+    info: "Выиграл титул с минимальным отрывом в 1 очко.",
+    image: "./2007.jpg",
+  },
+  2008: {
+    name: "Льюис Хэмилтон",
+    team: "McLaren MP4-23",
+    info: "Самый молодой чемпион на тот момент.",
+    image: "./2008.jpg",
+  },
+  2009: {
+    name: "Дженсон Баттон",
+    team: "Brawn GP BGP 001",
+    info: "Сенсационный титул новой команды Brawn GP.",
+    image: "./2009.jpg",
+  },
+  2010: {
+    name: "Себастьян Феттель",
+    team: "Red Bull RB6",
+    info: "Самый молодой чемпион Формулы-1.",
+    image: "./2010.jpg",
+  },
+  2011: {
+    name: "Себастьян Феттель",
+    team: "Red Bull RB7",
+    info: "Доминирование Red Bull и второй титул Феттеля.",
+    image: "./2011.jpg",
+  },
+  2012: {
+    name: "Себастьян Феттель",
+    team: "Red Bull RB8",
+    info: "Третий титул подряд в драматичном финале в Бразилии.",
+    image: "./2012.jpg",
+  },
+  2013: {
+    name: "Себастьян Феттель",
+    team: "Red Bull RB9",
+    info: "Четвёртый подряд титул — 9 побед подряд.",
+    image: "./2013.jpg",
+  },
+  2014: {
+    name: "Льюис Хэмилтон",
+    team: "Mercedes W05",
+    info: "Начало гибридной эры и доминирования Mercedes.",
+    image: "./2014.jpg",
+  },
+  2015: {
+    name: "Льюис Хэмилтон",
+    team: "Mercedes W06",
+    info: "Второй подряд титул в новой эре.",
+    image: "./2015.jpg",
+  },
+  2016: {
+    name: "Нико Росберг",
+    team: "Mercedes W07",
+    info: "Единственный титул Росберга, после которого он ушёл.",
+    image: "./2016.jpg",
+  },
+  2017: {
+    name: "Льюис Хэмилтон",
+    team: "Mercedes W08",
+    info: "Возвращение на вершину и четвёртый титул.",
+    image: "./2017.jpg",
+  },
+  2018: {
+    name: "Льюис Хэмилтон",
+    team: "Mercedes W09",
+    info: "Пятый титул, уверенное лидерство весь сезон.",
+    image: "./2018.jpg",
+  },
+  2019: {
+    name: "Льюис Хэмилтон",
+    team: "Mercedes W10",
+    info: "Шестой титул, почти безупречный сезон.",
+    image: "./2019.jpg",
+  },
+  2020: {
+    name: "Льюис Хэмилтон",
+    team: "Mercedes W11",
+    info: "Седьмой титул, повтор рекорда Шумахера.",
+    image: "./2020.jpg",
+  },
+  2021: {
+    name: "Макс Ферстаппен",
+    team: "Red Bull RB16B",
+    info: "Драматичная победа над Хэмилтоном в финале.",
+    image: "./2021.jpg",
+  },
+  2022: {
+    name: "Макс Ферстаппен",
+    team: "Red Bull RB18",
+    info: "Абсолютное доминирование — 15 побед за сезон.",
+    image: "./2022.jpg",
+  },
+  2023: {
+    name: "Макс Ферстаппен",
+    team: "Red Bull RB19",
+    info: "Рекордный сезон — 19 побед и 21 подиум.",
+    image: "./2023.jpg",
+  },
+  2024: {
+    name: "Макс Ферстаппен",
+    team: "Red Bull RB20",
+    info: "Ещё один доминирующий сезон Red Bull.",
+    image: "./2024.jpg",
+  },
+  2025: {
+    name: "Макс Ферстаппен (предположительно)",
+    team: "Red Bull RB21",
+    info: "Ожидаемое продолжение доминирования Red Bull.",
+    image: "./2025.jpg",
+  },
+};
+
+    const timeline = document.getElementById("timeline");
+    const carImage = document.getElementById("carImage");
+    const championName = document.getElementById("championName");
+    const carInfo = document.getElementById("carInfo");
+    const bg = document.getElementById("bg");
+
+    Object.entries(championsData).forEach(([year, data]) => {
+        const point = document.createElement("div");
+        point.classList.add("year-point");
+
+        const label = document.createElement("div");
+        label.classList.add("year-label");
+        label.textContent = year;
+
+        point.appendChild(label);
+        timeline.appendChild(point);
+
+        point.addEventListener("click", () => {
+            showInfo(year, data, point);
+        });
+    });
+
+    function showInfo(year, data, point) {
+        document.querySelectorAll(".year-point").forEach(p => p.classList.remove("active"));
+        point.classList.add("active");
+
+        carImage.src = data.image;
+        championName.textContent = `${data.name} — ${data.team}`;
+        carInfo.textContent = data.info;
+        bg.style.backgroundImage = `url(${data.image})`;
+    }
+
+    const firstYear = Object.keys(championsData)[0];
+const firstData = championsData[firstYear];
+const firstPoint = timeline.querySelector(".year-point");
+
+showInfo(firstYear, firstData, firstPoint);
+
+</script>
+</body>
+</html>

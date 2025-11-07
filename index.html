@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Формула 1 - Легенды гонок</title>
+  <link rel="stylesheet" href="Style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo-container">
+          <img src="./Ф1.png" alt="F1 Logo" class="logo-icon" />
+          <div class="logo">F1 LEGENDS</div>
+        </div>
+
+        <ul class="nav-menu">
+          <li><a href="index.html" class="active">Главная</a></li>
+          <li><a href="forme.html">Гонщики</a></li>
+          <li><a href="comands.html">Команды</a></li>
+          <li><a href="years.html">Даты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Формула 1</h1>
+      <p class="subtitle">Величайшие гонщики в истории автоспорта</p>
+      <a href="forme.html" class="cta-button">Узнать о гонщиках</a>
+    </div>
+
+    <svg class="track-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
+      <path
+        id="trackPath"
+        stroke="#333"
+        stroke-width="6"
+        fill="none"
+        d="M200,300 C250,200 350,150 450,180 C550,210 650,250 700,300 C750,350 800,400 900,380 C1000,360 1050,280 1000,220 C950,160 850,130 750,150 C650,170 600,220 550,260 C500,300 400,350 300,340 C250,330 220,320 200,300"
+      />
+      <g id="carLayer">
+        <circle id="carDot" r="8" fill="#e10600" />
+      </g>
+    </svg>
+  </section>
+  <section class="intro">
+    <div class="container">
+      <h2>Добро пожаловать в мир Формулы 1</h2>
+      <p>Формула 1 — это вершина автоспорта, где лучшие гонщики мира соревнуются на предельных скоростях.</p>
+
+      <div class="stats">
+        <div class="stat-card">
+          <h3>350+</h3>
+          <p>км/ч максимальная скорость</p>
+        </div>
+        <div class="stat-card">
+          <h3>20+</h3>
+          <p>гонок в сезоне</p>
+        </div>
+        <div class="stat-card">
+          <h3>70+</h3>
+          <p>лет истории</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="featured">
+    <div class="container">
+      <h2>Избранные гонщики</h2>
+
+      <div class="drivers-preview">
+        <div class="driver-card">
+          <div class="driver-image" style="background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);">
+            <img src="./лауда.jpg" class="driver-photo" alt="Никки Лауда" />
+          </div>
+          <h3>Никки Лауда (Лауда)</h3>
+          <p>Легенда Ferrari</p>
+        </div>
+
+        <div class="driver-card Verstappen">
+          <div class="driver-image" style="background: linear-gradient(135deg, #001a3d 0%, #0072ce 100%);">
+            <img src="./верстапен.jpg" class="driver-photo" alt="Макс Ферстаппен" />
+          </div>
+          <h3>Макс Ферстаппен (Ферстаппен)</h3>
+          <p>Чемпион Red Bull</p>
+        </div>
+
+        <div class="driver-card">
+          <div class="driver-image" style="background: linear-gradient(135deg, #DC0000 0%, #FF6B6B 100%);">
+            <img src="./леклерк.jpg" class="driver-photo" alt="Шарль Леклерк" />
+          </div>
+          <h3>Шарль Леклерк (Леклерк)</h3>
+          <p>Звезда Ferrari</p>
+        </div>
+
+        <div class="driver-card">
+          <div class="driver-image" style="background: linear-gradient(135deg, #DC0000 0%, #FF6B6B 100%);">
+            <img src="./Шумахер.jpg" class="driver-photo" alt="Михаэль Шумахер" />
+          </div>
+          <h3>Михаэль Шумахер (Шумахер)</h3> 
+          <p>Император скорости</p>
+        </div>
+      </div>
+
+      <div class="cta-center">
+        <a href="forme.html" class="secondary-button">Подробнее о гонщиках</a>
+      </div>
+    </div>
+  </section>
+  <div class="assistant-bubble" id="assistantBtn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="F1" />
+  </div>
+
+  <div class="assistant-chat" id="assistantWindow">
+    <div class="assistant-header">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="F1" class="assistant-logo" />
+      <span>F1 Ассистент</span>
+    </div>
+
+    <div class="assistant-messages" id="chatMessages">
+      <div class="assistant-msg bot">
+        Привет! Я — твой F1-ассистент. Хочешь узнать результаты, команды или историю Формулы 1?
+      </div>
+    </div>
+
+    <div class="assistant-input">
+      <input type="text" id="userInput" placeholder="Напиши, например: 'Кто выиграл в 2004?'" />
+      <button id="sendBtn">➤</button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const assistantBtn = document.getElementById("assistantBtn");
+      const assistantWindow = document.getElementById("assistantWindow");
+      const sendBtn = document.getElementById("sendBtn");
+      const userInput = document.getElementById("userInput");
+      const chatMessages = document.getElementById("chatMessages");
+
+      const f1Data = {
+        winners: {
+          2000: { name: "Михаэль Шумахер", surname: "Шумахер", car: "Ferrari F1-2000", info: "Выиграл чемпионат с доминирующей скоростью." },
+          2001: { name: "Михаэль Шумахер", surname: "Шумахер", car: "Ferrari F2001", info: "Снова чемпион, выиграл 9 гонок из 17." },
+          2002: { name: "Михаэль Шумахер", surname: "Шумахер", car: "Ferrari F2002", info: "Победа в 11 гонках сезона." },
+          2003: { name: "Михаэль Шумахер", surname: "Шумахер", car: "Ferrari F2003-GA", info: "Чемпионат с напряжённой борьбой с Фисикеллой." },
+          2004: { name: "Михаэль Шумахер", surname: "Шумахер", car: "Ferrari F2004", info: "Легендарный сезон — 13 побед из 18 гонок." },
+          2005: { name: "Фернандо Алонсо", surname: "Алонсо", car: "Renault R25", info: "Первый титул Алонсо, прервал доминацию Шумахера." },
+          2006: { name: "Фернандо Алонсо", surname: "Алонсо", car: "Renault R26", info: "Второй титул подряд." },
+          2007: { name: "Кими Райкконен", surname: "Райкконен", car: "Ferrari F2007", info: "Выиграл чемпионат в напряжённой борьбе с Хэмилтоном и Алонсо." },
+          2008: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "McLaren MP4-23", info: "Первый титул Хэмилтона." },
+          2009: { name: "Дженсон Баттон", surname: "Баттон", car: "Brawn BGP 001", info: "Сенсационный сезон с командой Brawn GP." },
+          2010: { name: "Себастьян Феттель", surname: "Феттель", car: "Red Bull RB6", info: "Первый титул Феттеля." },
+          2011: { name: "Себастьян Феттель", surname: "Феттель", car: "Red Bull RB7", info: "Доминирование в сезоне." },
+          2012: { name: "Себастьян Феттель", surname: "Феттель", car: "Red Bull RB8", info: "Чемпионат с несколькими победами в последних гонках." },
+          2013: { name: "Себастьян Феттель", surname: "Феттель", car: "Red Bull RB9", info: "Четвёртый титул подряд." },
+          2014: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "Mercedes F1 W05", info: "Первый титул с Mercedes." },
+          2015: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "Mercedes F1 W06", info: "Доминирование в сезоне." },
+          2016: { name: "Нико Росберг", surname: "Росберг", car: "Mercedes F1 W07", info: "Выиграл титул после напряжённой борьбы с Хэмилтоном." },
+          2017: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "Mercedes F1 W08", info: "Чемпионат с преимуществом в последних гонках." },
+          2018: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "Mercedes F1 W09", info: "Снова чемпион с Mercedes." },
+          2019: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "Mercedes F1 W10", info: "Чемпионат с большим отрывом." },
+          2020: { name: "Льюис Хэмилтон", surname: "Хэмилтон", car: "Mercedes F1 W11", info: "Седьмой титул, сравнялся с Шумахером." },
+          2021: { name: "Макс Ферстаппен", surname: "Ферстаппен", car: "Red Bull RB16B", info: "Первый титул после драматичной борьбы с Хэмилтоном." },
+          2022: { name: "Макс Ферстаппен", surname: "Ферстаппен", car: "Red Bull RB18", info: "Абсолютное превосходство." },
+          2023: { name: "Макс Ферстаппен", surname: "Ферстаппен", car: "Red Bull RB19", info: "Третий титул подряд." },
+          2024: { name: "Макс Ферстаппен", surname: "Ферстаппен", car: "Red Bull RB20", info: "Чемпионат в процессе." }
+        },
+
+        drivers: {
+          "лауда": { full: "Никки Лауда", cars: ["Ferrari", "McLaren"], years: [1975, 1977, 1984] },
+          "шумахер": { full: "Михаэль Шумахер", cars: ["Benetton", "Ferrari"], years: [1994, 1995, 2000, 2001, 2002, 2003, 2004] },
+          "ферстаппен": { full: "Макс Ферстаппен", cars: ["Red Bull"], years: [2021, 2022, 2023, 2024] },
+          "леклерк": { full: "Шарль Леклерк", cars: ["Ferrari"], years: [] },
+          "хэмилтон": { full: "Льюис Хэмилтон", cars: ["Mercedes", "McLaren"], years: [2008, 2014, 2015, 2017, 2018, 2019, 2020] },
+          "алонсо": { full: "Фернандо Алонсо", cars: ["Renault", "McLaren", "Ferrari"], years: [2005, 2006] },
+          "райкконен": { full: "Кими Райкконен", cars: ["Ferrari", "McLaren"], years: [2007] },
+          "баттон": { full: "Дженсон Баттон", cars: ["Brawn GP", "McLaren"], years: [2009] },
+          "феттель": { full: "Себастьян Феттель", cars: ["Red Bull", "Ferrari"], years: [2010, 2011, 2012, 2013] },
+          "росберг": { full: "Нико Росберг", cars: ["Mercedes"], years: [2016] }
+        }
+      };
+
+      const unknownReplies = ["Попробуй спросить про год, гонщика или команду."];
+
+      assistantBtn.addEventListener("click", () => {
+        assistantWindow.classList.toggle("open");
+      });
+
+      sendBtn.addEventListener("click", sendMessage);
+      userInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+        addMessage(text, "user");
+        userInput.value = "";
+        setTimeout(() => handleAssistant(text), 200);
+      }
+
+      function handleAssistant(msg) {
+        const msgLower = msg.toLowerCase();
+        let reply = "";
+        const yearMatch = msg.match(/\b(20\d{2}|19\d{2})\b/);
+        if (yearMatch) {
+          const y = parseInt(yearMatch[0]);
+          if (f1Data.winners[y]) {
+            const w = f1Data.winners[y];
+            reply = `${y} год — чемпион ${w.name} (${w.surname}) на ${w.car}. ${w.info}`;
+          }
+        }
+        if (!reply) {
+          for (const driver in f1Data.drivers) {
+            if (msgLower.includes(driver)) {
+              const d = f1Data.drivers[driver];
+              reply = `${d.full} (${capitalize(driver)}) выигрывал чемпионаты в ${d.years.join(", ") || "пока нет титулов"} на машинах: ${d.cars.join(", ")}.`;
+              break;
+            }
+          }
+        }
+        if (!reply) {
+          reply = unknownReplies[Math.floor(Math.random() * unknownReplies.length)];
+        }
+
+        addMessage(reply, "bot");
+      }
+
+      function addMessage(text, sender) {
+        const div = document.createElement("div");
+        div.classList.add("assistant-msg", sender);
+        div.textContent = text;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+    });
+  </script>
+
+  <script src="Script.js"></script>
+</body>
+</html>

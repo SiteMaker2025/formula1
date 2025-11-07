@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Команды Формулы 1 — F1 LEGENDS</title>
+  <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo-container">
+          <img src="./Ф1.png" alt="F1 Logo" class="logo-icon">
+          <div class="logo">F1 LEGENDS</div>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="index.html">Главная</a></li>
+          <li><a href="forme.html">Гонщики</a></li>
+          <li><a href="comands.html" class="active">Команды</a></li>
+          <li><a href="years.html">Даты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<section class="teams-hero">
+  <div class="hero-inner">
+    <h1>Трасса — Monaco (стилизованно)</h1>
+  </div>
+
+  <svg class="track-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
+    <path id="trackPath" stroke="#333" stroke-width="6" fill="none" d="
+      M150,340 C160,250 230,180 310,170 
+      C380,160 430,180 480,220 
+      C520,250 560,300 640,310 
+      C720,320 820,290 880,250 
+      C920,220 940,170 920,130 
+      C900,90 840,80 780,100 
+      C720,120 700,160 680,200 
+      C660,240 620,260 580,260 
+      C520,260 480,240 440,210 
+      C400,180 360,150 300,150 
+      C240,150 200,190 180,230 
+      C160,270 150,300 150,340 Z
+    " />
+    <g id="carLayer">
+      <circle id="carDot" r="8" fill="#e10600" />
+    </g>
+  </svg>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const path = document.getElementById('trackPath');
+  const carLayer = document.getElementById('carLayer');
+
+  const length = path.getTotalLength();
+  path.style.strokeDasharray = length;
+  path.style.strokeDashoffset = length;
+  path.style.transition = 'stroke-dashoffset 4000ms ease-in-out';
+
+  requestAnimationFrame(() => { path.style.strokeDashoffset = '0'; });
+
+  const loopDuration = 10000;
+  let startTime = null;
+
+  function animate(time) {
+    if (!startTime) startTime = time;
+    const t = ((time - startTime) % loopDuration) / loopDuration;
+    const dist = t * length;
+    const pt = path.getPointAtLength(dist);
+
+    carLayer.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+    requestAnimationFrame(animate);
+  }
+
+  setTimeout(() => requestAnimationFrame(animate), 4000);
+});
+</script>
+
+  <section class="teams">
+    <div class="container">
+      <h2 style="text-align:center; color:#e10600; margin-bottom:1rem;">Топ команды</h2>
+      <div class="teams-grid">
+        <div class="team-card ferrari">
+          <img src="./ferrari.png" alt="Ferrari логотип">
+          <h3>Ferrari</h3>
+          <p>Итальянская легенда — самая титулованная команда в истории Формулы-1.</p>
+        </div>
+        <div class="team-card mercedes">
+          <img src="./ф1мерс.webp" alt="Mercedes логотип">
+          <h3>Mercedes</h3>
+          <p>Технологический лидер и многократный победитель чемпионатов.</p>
+        </div>
+        <div class="team-card redbull">
+          <img src="./редбулф1.png" alt="Red Bull логотип">
+          <h3>Red Bull Racing</h3>
+          <p>Современная сила, ориентированная на скорость и аэродинамику.</p>
+        </div>
+        <div class="team-card mclaren">
+          <img src="./макларенф1jpg.jpg" alt="McLaren логотип">
+          <h3>McLaren</h3>
+          <p>Классика британского автоспорта с богатой историей.</p>
+        </div>
+      </div>
+      <div class="teams-cta" style="text-align:center; margin-top:1.6rem;">
+        <a href="forme.html" class="secondary-button">Узнать о гонщиках</a>
+      </div>
+    </div>
+  </section>
+
+
+  <script src="Script.js"></script>
+</body>
+</html>
